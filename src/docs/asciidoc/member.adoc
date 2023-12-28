@@ -5,12 +5,15 @@
 :toc: left
 :toclevels: 3
 
-== 회원 가져오기
+== 회원 조회
 
-=== Request
+=== Http Request
 
 include::{snippets}/members/checkMember/http-request.adoc[]
+include::{snippets}/members/checkMember/path-parameters.adoc[]
+include::{snippets}/members/checkMember/request-fields.adoc[]
 
-=== Response
+=== Http Response
 
 include::{snippets}/members/checkMember/http-response.adoc[]
+include::{snippets}/members/checkMember/response-fields.adoc[]
