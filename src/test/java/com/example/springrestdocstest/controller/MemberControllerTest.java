@@ -14,6 +14,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
+import com.example.springrestdocstest.ControllerTestConfig;
 import com.example.springrestdocstest.dto.MemberDto;
 import com.example.springrestdocstest.dto.MemberResponse;
 import com.example.springrestdocstest.service.MemberService;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -34,9 +37,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@AutoConfigureRestDocs
 @WebMvcTest(MemberController.class)
-class MemberControllerTest {
+class MemberControllerTest extends ControllerTestConfig {
 
   @Autowired
   private MockMvc mockMvc;
@@ -66,7 +68,7 @@ class MemberControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(dto)))
         .andDo(print())
-        .andDo(document("members/checkMember",
+        .andDo(MockMvcRestDocumentationWrapper.document("members/checkMember",
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             pathParameters(

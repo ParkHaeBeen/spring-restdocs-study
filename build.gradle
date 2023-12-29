@@ -1,8 +1,11 @@
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    //id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'com.epages.restdocs-api-spec' version "0.17.1"
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.example'
@@ -18,14 +21,17 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-
 repositories {
-    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/" //1.1
+    }
 }
 
+/*
 ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
+*/
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -36,11 +42,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    // (3)
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    // (4)
+   // asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.17.1'
+    testImplementation "com.epages:restdocs-api-spec-restassured:0.17.1"
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    swaggerUI 'org.webjars:swagger-ui:4.11.1'
 }
 
 tasks.named('test') {
@@ -48,29 +54,55 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+/*
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+*/
 
-
-ext { // (5)
+ext {
     snippetsDir = file('build/generated-snippets')
 }
 
-test { // (6)
+/*test {
     outputs.dir snippetsDir
+}*/
+
+/*asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}*/
+
+/*bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+}*/
+
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
 }
 
-asciidoctor { // (7)
-    inputs.dir snippetsDir // (8)
-    configurations 'asciidoctorExt' // (9)
-    dependsOn test // (10)
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn 'generateSwaggerUISample'
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into("${project.buildDir}/resources/main/static/docs")
 }
 
 bootJar {
-    dependsOn asciidoctor // (1)
-    from("${asciidoctor.outputDir}") { // (2)
-        into 'static/docs'
-    }
+    dependsOn('openapi3')
 }
+openapi3 {
+    server = "http://localhost:8085"
+    title = "THT API 문서"
+    description = "Spring REST Docs with SwaggerUI."
+    version = "0.0.1"
+    outputFileNamePrefix = 'open-api-3.0.1'
+    format = 'json'
+    outputDirectory= 'build/resources/main/static/docs'
+}
+
