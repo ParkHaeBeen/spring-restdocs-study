@@ -12,6 +12,10 @@ java {
     sourceCompatibility = '17'
 }
 
+ext { // (5)
+    snippetsDir = file('build/generated-snippets')
+}
+
 configurations {
     asciidoctorExt
     compileOnly {
@@ -21,10 +25,6 @@ configurations {
 
 repositories {
     mavenCentral()
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
@@ -54,23 +54,20 @@ tasks.named('asciidoctor') {
 }
 
 
-ext { // (5)
-    snippetsDir = file('build/generated-snippets')
-}
-
-test { // (6)
-    outputs.dir snippetsDir
-}
-
 asciidoctor { // (7)
     inputs.dir snippetsDir // (8)
     configurations 'asciidoctorExt' // (9)
     dependsOn test // (10)
 }
 
-bootJar {
-    dependsOn asciidoctor // (1)
-    from("${asciidoctor.outputDir}") { // (2)
-        into 'static/docs'
-    }
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("${asciidoctor.outputDir}")
+    into file("src/main/resources/static")
 }
+
+bootJar {
+    dependsOn copyDocument
+}
+
+
