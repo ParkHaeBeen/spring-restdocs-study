@@ -63,7 +63,7 @@ asciidoctor { // (7)
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
     from file("${asciidoctor.outputDir}")
-    into file("src/main/resources/static")
+    into file("src/main/resources/static/docs")
 }
 
 bootJar {
