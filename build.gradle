@@ -86,11 +86,14 @@ tasks.withType(GenerateSwaggerUI) {
     dependsOn 'openapi3'
 }
 
-tasks.register('copySwaggerUI', Copy) {
-    dependsOn 'generateSwaggerUISample'
-    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
-    from("${generateSwaggerUISampleTask.outputDir}")
-    into("${project.buildDir}/resources/main/static/docs")
+tasks.withType(GenerateSwaggerUI){
+    dependsOn'openapi3'
+
+    delete file('scr/main/resources/static/docs')
+    copy{
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs"
+    }
 }
 
 bootJar {

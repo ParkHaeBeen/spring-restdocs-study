@@ -37,8 +37,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@AutoConfigureRestDocs
+@AutoConfigureMockMvc
 @WebMvcTest(MemberController.class)
-class MemberControllerTest extends ControllerTestConfig {
+class MemberControllerTest  {
 
   @Autowired
   private MockMvc mockMvc;

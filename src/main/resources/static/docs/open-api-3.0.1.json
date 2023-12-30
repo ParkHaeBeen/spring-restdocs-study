@@ -1,0 +1,86 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "THT API 문서",
+    "description" : "Spring REST Docs with SwaggerUI.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8085"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/member/{id}" : {
+      "get" : {
+        "tags" : [ "member" ],
+        "operationId" : "members/checkMember",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id에 대한 설명",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/member-id-1176368577"
+              },
+              "examples" : {
+                "members/checkMember" : {
+                  "value" : "{\n  \"name\" : \"hello\",\n  \"age\" : 10\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/member-id201805096"
+                },
+                "examples" : {
+                  "members/checkMember" : {
+                    "value" : "{\n  \"name\" : \"hello\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "member-id-1176368577" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "MemberDto name 설명"
+          },
+          "age" : {
+            "type" : "number",
+            "description" : "MemberDto age 설명"
+          }
+        }
+      },
+      "member-id201805096" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "MemberResponse name 설명"
+          }
+        }
+      }
+    }
+  }
+}
