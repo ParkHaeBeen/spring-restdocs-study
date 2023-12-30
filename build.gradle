@@ -27,11 +27,6 @@ repositories {
     }
 }
 
-/*
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
-}
-*/
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -82,9 +77,6 @@ ext {
     }
 }*/
 
-tasks.withType(GenerateSwaggerUI) {
-    dependsOn 'openapi3'
-}
 
 tasks.withType(GenerateSwaggerUI){
     dependsOn'openapi3'
